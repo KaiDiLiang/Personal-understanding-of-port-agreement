@@ -7,7 +7,7 @@ import json
 import re
 from pathlib import Path as P
 import _thread
-
+import threading
 
 class Spider():
 	def __init__(self):
@@ -45,7 +45,7 @@ class Spider():
 			data_url.append(url)
 		for i in range(79):
 			res = requests.get(data_url[i], headers=headers)
-			print('正在爬取第' + str(i) + '张')
+			print('正在爬取' + str(url_number) + '的第' + str(i) + '张')
 			etree_res = etree.HTML(res.text, etree.HTMLParser())
 			time.sleep(2)
 			xpath_res_alt = etree_res.xpath('//p/a/img/@alt')
@@ -168,14 +168,70 @@ headers = [
         "scheme": "https",
         "user-agent": "User-Agent:Opera/9.80 (Windows NT 6.1; U; en) Presto/2.8.131 Version/11.11"
     },
+    {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "cache-control": "max-age=0",
+        "if-none-match": 'W/"607e3045-24d8"',
+        "sec-ch-ua": '"Not A;Brand";v="99", "Chromium";v="90", "Microsoft Edge";v="90"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-dest": "document",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-site": "none",
+        "sec-fetch-user": "?1",
+        "upgrade-insecure-requests": "1",
+        "referer": "https://m.meitu131.net/",
+        "authority": "m.meitu131.net",
+        "method": "GET",
+        "scheme": "https",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36 Edg/90.0.818.66"
+    },
+    {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "cache-control": "max-age=0",
+        "if-none-match": 'W/"607e3045-24d8"',
+        "sec-ch-ua": '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-dest": "document",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-site": "none",
+        "sec-fetch-user": "?1",
+        "upgrade-insecure-requests": "1",
+        "referer": "https://m.meitu131.net/",
+        "authority": "m.meitu131.net",
+        "method": "GET",
+        "scheme": "https",
+        "user-agent": "Mozilla/5.0(Windows NT 10.0; Win64; x64)AppleWebKit/537.36(KHTML, like Gecko)Chrome/90.0.4430.212 Safari/537.36"
+    }
 ]
-count =[2294,5086, 5081,4466]
+count=[5572, 5723, 5700, 5688, 5686, 198, 5610, 3684, 5336]
 count_1 = 0
-while count_1 < 2:
+thread_list = []
+thread0 = threading.Thread(target=the_spider.test,args=(count[0],headers[0]))
+thread1 = threading.Thread(target=the_spider.test,args=(count[1],headers[1]))
+thread2 = threading.Thread(target=the_spider.test,args=(count[2],headers[2]))
+thread3 = threading.Thread(target=the_spider.test,args=(count[3],headers[3]))
+# thread4 = threading.Thread(target=the_spider.test,args=(count[4],headers[4]))
+# thread5 = threading.Thread(target=the_spider.test,args=(count[5],headers[5]))
+while count_1 < 4:
     try:
-        _thread.start_new_thread( the_spider.test(count[0],headers[0]) )
-        _thread.start_new_thread( the_spider.test(count[1],headers[1] ))
-        _thread.start_new_thread( the_spider.test(count[2],headers[2] ))
-        _thread.start_new_thread( the_spider.test(count[3],headers[3] ))
+        if count_1 < 1:
+            thread0.start()
+            thread1.start()
+        elif count_1 <= 1:
+            thread2.start()
+            thread3.start()
+            # thread4.start()
+            # thread5.start()
+        # t1 = _thread.start_new_thread( the_spider.test(count[0],headers[0]) )
+        # t2 = _thread.start_new_thread( the_spider.test(count[1],headers[1] ))
+        # t3 = _thread.start_new_thread( the_spider.test(count[2],headers[2] ))
+        # t4 = _thread.start_new_thread( the_spider.test(count[3],headers[3] ))
+        # t5 = _thread.start_new_thread( the_spider.test(count[4],headers[4] ))
+        count_1 += 1
     except:
-        print('多线程失败')
+        print('多线程完成')
+        exit()
